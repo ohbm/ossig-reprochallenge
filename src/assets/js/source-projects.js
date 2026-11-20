@@ -1,5 +1,5 @@
 const GITHUB_REPO = "ohbm/ossig";
-const SOURCE_LABEL = "Repro Challenge 2026";
+// Each edition's GitHub label is set on its panel in src/source-projects.njk (data-label="...").
 
 function parseIssueField(body, fieldName) {
   const escapedFieldName = fieldName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -8,11 +8,11 @@ function parseIssueField(body, fieldName) {
   return match ? match[1].trim() : null;
 }
 
-function showState({ loading = false, error = "", empty = false, hasProjects = false }) {
-  const loadingEl = document.getElementById("projects-loading");
-  const errorEl = document.getElementById("projects-error");
-  const emptyEl = document.getElementById("projects-empty");
-  const listEl = document.getElementById("projects-list");
+function showState(panel, { loading = false, error = "", empty = false, hasProjects = false }) {
+  const loadingEl = panel.querySelector(".projects-loading");
+  const errorEl = panel.querySelector(".projects-error");
+  const emptyEl = panel.querySelector(".projects-empty");
+  const listEl = panel.querySelector(".projects-list");
 
   if (!loadingEl || !errorEl || !emptyEl || !listEl) {
     return;
@@ -38,10 +38,11 @@ function createProjectItem(title, url) {
   return link;
 }
 
-async function fetchSourceProjects() {
-  const endpoint = `https://api.github.com/repos/${GITHUB_REPO}/issues?state=open&labels=${encodeURIComponent(SOURCE_LABEL)}&per_page=100`;
+async function fetchSourceProjects(panel) {
+  const label = panel.dataset.label;
+  const endpoint = `https://api.github.com/repos/${GITHUB_REPO}/issues?state=open&labels=${encodeURIComponent(label)}&per_page=100`;
 
-  showState({ loading: true });
+  showState(panel, { loading: true });
 
   try {
     const response = await fetch(endpoint, {
@@ -77,10 +78,10 @@ async function fetchSourceProjects() {
       })
       .filter((entry) => entry.isSourceParty && entry.title);
 
-    const listEl = document.getElementById("projects-list");
+    const listEl = panel.querySelector(".projects-list");
 
     if (!matchingProjects.length) {
-      showState({ empty: true });
+      showState(panel, { empty: true });
       return;
     }
 
@@ -93,10 +94,12 @@ async function fetchSourceProjects() {
       listEl.appendChild(createProjectItem(project.title, project.htmlUrl));
     });
 
-    showState({ hasProjects: true });
+    showState(panel, { hasProjects: true });
   } catch (error) {
-    showState({ error: error.message || "An unexpected error occurred while loading projects." });
+    showState(panel, { error: error.message || "An unexpected error occurred while loading projects." });
   }
 }
 
-fetchSourceProjects();
+document.querySelectorAll(".projects-panel[data-label]").forEach((panel) => {
+  fetchSourceProjects(panel);
+});

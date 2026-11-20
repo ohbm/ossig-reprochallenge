@@ -25,19 +25,39 @@ activeTab: source-projects
     </a>
   </div>
 
-  <div id="projects-loading" class="projects-state">
-    <div class="spinner" aria-hidden="true"></div>
-    <p>Loading source projects from GitHub...</p>
+  <div class="edition-tabs" role="tablist" aria-label="Challenge editions" data-tabs>
+    <button type="button" role="tab" id="projects-tab-2025-2027" aria-controls="projects-2025-2027" aria-selected="true">2025–2027 edition</button>
+    <button type="button" role="tab" id="projects-tab-2026-2028" aria-controls="projects-2026-2028" aria-selected="false">2026–2028 edition</button>
   </div>
 
-  <div id="projects-error" class="projects-state hidden" role="alert"></div>
-  <div id="projects-empty" class="projects-state hidden">No source projects submitted yet.</div>
+  <div id="projects-2025-2027" class="edition-panel projects-panel" role="tabpanel" aria-labelledby="projects-tab-2025-2027" data-label="Repro Challenge 2026">
+    <div class="projects-state projects-loading">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Loading source projects from GitHub...</p>
+    </div>
 
-  <div id="projects-list" class="projects-grid hidden"></div>
+    <div class="projects-state projects-error hidden" role="alert"></div>
+    <div class="projects-state projects-empty hidden">No source projects submitted yet.</div>
+
+    <div class="projects-grid projects-list hidden"></div>
+  </div>
+
+  <div id="projects-2026-2028" class="edition-panel projects-panel" role="tabpanel" aria-labelledby="projects-tab-2026-2028" data-label="Repro Challenge 2027">
+    <div class="projects-state projects-loading">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Loading source projects from GitHub...</p>
+    </div>
+
+    <div class="projects-state projects-error hidden" role="alert"></div>
+    <div class="projects-state projects-empty hidden">No source projects submitted yet.</div>
+
+    <div class="projects-grid projects-list hidden"></div>
+  </div>
 
   <p class="projects-note">
     Project cards open in a new tab so the complete submission remains visible on GitHub.
   </p>
 </section>
 
+<script src="{{ '/assets/js/edition-tabs.js' | url }}" defer></script>
 <script src="{{ '/assets/js/source-projects.js' | url }}" defer></script>
